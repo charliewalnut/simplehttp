@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+  "strings"
 )
 
 type handler struct{}
@@ -25,13 +26,24 @@ func serve(filename string, w http.ResponseWriter) {
 	fmt.Fprint(w, firstChunk)
 }
 
-func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func serveChunks(w http.ResponseWriter) {
 	serve("first_chunk.txt", w)
 	if f, ok := w.(http.Flusher); ok {
 		f.Flush()
 	}
 	time.Sleep(500 * time.Millisecond)
 	serve("second_chunk.txt", w)
+}
+
+
+func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+  if strings.HasSuffix(r.URL.Path, ".css") {
+    w.Header()["Content-Type"] = []string{"text/css; charset=utf-8"}
+    time.Sleep(500 * time.Millisecond)
+    fmt.Fprint(w, "body { background-color: green }")
+  } else {
+    serveChunks(w)
+  }
 }
 
 func main() {

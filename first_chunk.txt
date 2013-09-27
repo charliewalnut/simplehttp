@@ -1,2 +1,13 @@
 <!DOCTYPE html>
-<img src="http://localhost:8000/404.gif" onerror="document.write('written')">
+<script>
+window.setTimeout(function() {
+  console.log("timeout fired");
+  document.write("goodbye");
+}, 10);
+console.log("about to insert stylesheet");
+</script>
+<link rel=stylesheet type=text/css href="test.css"></link>
+<script>
+window.alert("HALLLOOOO");
+</script>
+
